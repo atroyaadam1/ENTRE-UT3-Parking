@@ -10,31 +10,57 @@
  */
 public class Parking
 {
-    
+    private final char Regular = 'R';
+    private final char Comercial = 'C';
+    private final double PRECIO_BASE_REGULAR = 2.0;
+    private final double PRECIO_MEDIA_REGULAR_HASTA11 = 3.0;
+    private final double PRECIO_MEDIA_REGULAR_DESPUES11 = 5.0;
+    private final int HORA_INICIO_ENTRADA_TEMPRANA = 6 * 60;
+    private final int HORA_FIN_ENTRADA_TEMPRANA = 8 * 60 + 30;
+    private final int HORA_INICIO_SALIDA_TEMPRANA = 18 * 60;
+    private final double PRECIO_TARIFA_PLANA_REGULAR = 15.0;
+    private final double PRECIO_PRIMERAS3_COMERCIAL = 5.00;
+    private final double PRECIO_MEDIA_COMERCIAL = 3.00;
+    private String nombre;
+    private int cliente;
+    private int importeTotal;
+    private int regular;
+    private int clientesLunes;
+    private int clientesSabado;
+    private int clientesDomingo;
+    private int clienteMaximoComercial;
+    private int importeMaximoComercial;
+
     /**
      * Inicializa el parking con el nombre indicada por el parámetro.
      * El resto de atributos se inicializan a 0 
      */
-    public Parking() {
-
-       
-
+    public Parking(String queNombre) { 
+        nombre = queNombre;
+        cliente = 0;
+        importeTotal = 0;
+        regular = 0;
+        clientesLunes = 0;
+        clientesSabado = 0;
+        clientesDomingo = 0;
+        clienteMaximoComercial = 0;
+        importeMaximoComercial = 0;
     }
 
     /**
      * accesor para el nombre del parking
      *  
      */
-    public          () {
-         
+    public String getNombre() {
+        return nombre;
     }
-    
+
     /**
      * mutador para el nombre del parking
      *  
      */
-    public  () {
-        
+    public void setNombre (String queCNombre) {
+        nombre = queCNombre;
     }
 
     /**
@@ -47,38 +73,104 @@ public class Parking
      *    A partir de estos parámetros el método debe calcular el importe
      *    a pagar por el cliente y mostrarlo en pantalla 
      *    y  actualizará adecuadamente el resto de atributos
-     *    del parking para poder mostrar posteriormente (en otro método) las estadísticas
+     *    del parking para poder mostrar posteriormente (en otro método) 
+     *    las estadísticas
      *   
-     *    Por simplicidad consideraremos que un cliente entra y sale en un mismo día
+     *    Por simplicidad consideraremos que un cliente entra y 
+     *    sale en un mismo día
      *    
      *    (leer enunciado del ejercicio)
      */
-    public void facturarCliente(char tipoTarifa, int entrada, int salida, int dia) {
-        
-       
+    public void facturarCliente(char tipoTarifa, int entrada, 
+    int salida, int dia) {
+        int horaEntrada = entrada / 100;
+        int minutosDeEntrada = entrada % 100;
+        int horasDeSalida = salida / 100;
+        int minutosSalida = salida % 100;
+        String Varible1 = ":";
+        String Varible2 = horaEntrada + Varible1 + minutosDeEntrada;
+        String Varible3 = horasDeSalida + Varible1 + minutosSalida;
+        cliente++;
+        /** se considera entrada/salida temprana entre 6:00 y las 8:30 y sale entre las 15:00
+         * 18:00 tarifa plana de 15€ */
+        switch (tipoTarifa){
+            case "R":  if (entrada >= HORA_INICIO_ENTRADA_TEMPRANA  &&
+            entrada < HORA_INICIO_SALIDA_TEMPRANA && 
+            salida >= HORA_INICIO_SALIDA_TEMPRANA &&
+            salida < HORA_INICIO_SALIDA_TEMPRANA){ 
+                /** 15 pavos */
+                System.out.println( "*****************************" );
+                System.out.println( "Cliente nº : " + cliente );
+                System.out.println("Hora de la entrada: " + Varible2); 
+                System.out.println( "Hora de la salida: " + Varible3 );
+                System.out.println( "Tarifa a aplicar: " + tipoTarifa + "." );
+                System.out.println( "Importe a pagar" + "€" );
+                System.out.println( "*****************************" ) ;
+            }
+            else if(entrada < HORA_INICIO_ENTRADA_TEMPRANA 
+            && entrada >= HORA_FIN_ENTRADA_TEMPRANA) {
+                       /** 15 pavos */
+                System.out.println( "*****************************" );
+                System.out.println( "Cliente nº : " + cliente );
+                System.out.println("Hora de la entrada: " + Varible2); 
+                System.out.println( "Hora de la salida: " + Varible3 );
+                System.out.println( "Tarifa a aplicar: " + tipoTarifa + "." );
+                System.out.println( "Importe a pagar" + "€" );
+                System.out.println( "*****************************" ) ;
+            }
+                break;
+            case "c":  if (entrada < HORA_INICIO_ENTRADA_TEMPRANA  
+                && entrada >= HORA_FIN_ENTRADA_TEMPRANA 
+                && salida < HORA_INICIO_SALIDA_TEMPRANA 
+                && salida >= HORA_INICIO_SALIDA_TEMPRANA) {
+                    System.out.println( "*****************************" );
+                    System.out.println( "Cliente nº : " + cliente );
+                    System.out.println("Hora de la entrada: " + Varible2); 
+                    System.out.println( "Hora de la salida: " + Varible3 );
+                    System.out.println( "Tarifa a aplicar: " +  tipoTarifa);
+                    System.out.println( "Importe a pagar" + importeTotal + "€"  );
+                    System.out.println( "*****************************" ) ;
+                } 
+            
+                break;
+                case 3: if ((salida - entrada) <= 180) {
+                    System.out.println( "*****************************" );
+                    System.out.println( "Cliente nº : " + cliente );
+                    System.out.println("Hora de la entrada: " + Varible2); 
+                    System.out.println( "Hora de la salida: " + Varible3 );
+                    System.out.println( "Tarifa a aplicar: " +  PRECIO_TARIFA_PLANA_REGULAR);
+                    System.out.println( "Importe a pagar" + importeTotal + "€"  );
+                    System.out.println( "*****************************" ) ;
+                }
+                break;
+                case 4: if ((salida - entrada) > 180) {
+                    System.out.println( "*****************************" );
+                    System.out.println( "Cliente nº : " + cliente );
+                    System.out.println("Hora de la entrada: " + Varible2); 
+                    System.out.println( "Hora de la salida: " + Varible3 );
+                    System.out.println( "Tarifa a aplicar: " +  PRECIO_TARIFA_PLANA_REGULAR);
+                    System.out.println( "Importe a pagar" + importeTotal + "€"  );
+                    System.out.println( "*****************************" ) ;
+                }
+            }
 
-        
+        }
+        /**
+         * Muestra en pantalla las estadísticcas sobre el parking  
+         *   
+         * (leer enunciado)
+         *  
+         */
+        public void printEstadísticas() {
 
+        }
+
+        /**
+         *  Calcula y devuelve un String que representa el nombre del día
+         *  en el que más clientes han utilizado el parking - "SÁBADO"   "DOMINGO" o  "LUNES"
+         */
+        public void diaMayorNumeroClientes() {
+
+        }
     }
 
-    /**
-     * Muestra en pantalla las estadísticcas sobre el parking  
-     *   
-     * (leer enunciado)
-     *  
-     */
-    public void printEstadísticas() {
-         
-    }
-
-    /**
-     *  Calcula y devuelve un String que representa el nombre del día
-     *  en el que más clientes han utilizado el parking - "SÁBADO"   "DOMINGO" o  "LUNES"
-     */
-    public        diaMayorNumeroClientes() {
-
-        
-
-    }
-
-}

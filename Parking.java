@@ -1,4 +1,5 @@
 /**
+ *  
  * La clase representa a un parking de una ciudad europea
  * que dispone de dos tarifas de aparcamiento para los clientes
  * que lo usen: la tarifa regular (que incluye una tarifa plana para
@@ -6,6 +7,7 @@
  * cerca del parking, aparcan un nº elevado de horas y se benefician de esta 
  * tarifa más económica
  * (leer enunciado)
+ * author : ANTHONNY TROYA 
  * 
  */
 public class Parking
@@ -49,7 +51,7 @@ public class Parking
         importeMaximoComercial = 0;
     }
 
-    /**s =
+    /** 
      * accesor para el nombre del parking
      *  
      */
@@ -61,8 +63,8 @@ public class Parking
      * mutador para el nombre del parking
      *  
      */
-    public void setNombre (String queCNombre) {
-        nombre = queCNombre;
+    public void setNombre (String queNomb) {
+        nombre = queNomb;
     }
 
     /**
@@ -86,71 +88,70 @@ public class Parking
     public void facturarCliente(char tipoTarifa, int entrada, 
     int salida, int dia) {
         cliente++;
+        /** variables locales para horas y minutos de entrada y salida */
 
         int horaEntrada = entrada / 100;
         int minutosDeEntrada = entrada % 100;
         int horasDeSalida = salida / 100;
-        int minutosSalida = salida % 100;
+        int minutosDeSalida = salida % 100;
+        int entradaMinutos = horaEntrada * 60 + minutosDeEntrada;
+        int salidaMinutos = horasDeSalida * 60 + minutosDeSalida;
+
+        /** variables locales con el valor sumatorio de entrada y salida */
 
         String Varible2 = horaEntrada + ":" + minutosDeEntrada;
-        String Varible3 = horasDeSalida + ":" + minutosSalida;
+        String Varible3 = horasDeSalida + ":" + minutosDeSalida;
 
-        int temp = 15;
-        int reg = (2 + (((salida - entrada ) / 50) * 5));
-        int tresprimeras = 5;
-        int cadMedia =(5+ ((((salida - entrada) - 300) / 50) * 3));
-
-        double impor;
+        double impor = 0;
 
         /** se considera entrada/salida temprana entre 6:00 y las 8:30 y sale entre las 15:00
          * 18:00 tarifa plana de 15€ */
 
         /** importe = (salida - entrada) * 2 * Precio_primeras3_comercial**/
 
-        switch (tipoTarifa){
+        /** 
+        importeTotal = 0 */
+
+        switch (tipoTarifa) {
+            /** tipo tarifa de entrada temprana */
             case 'R':  if (entrada >= 600  && entrada < 830 &&  salida >= 1500 && salida < 1800){ 
-                System.out.println( "*****************************" );
-                System.out.println( "Cliente nº : " + cliente + ".");
-                System.out.println("Hora de la entrada: " + Varible2 + "."); 
-                System.out.println( "Hora de la salida: " + Varible3 + ".");
-                System.out.println( "Tarifa a aplicar: " + tipoTarifa + "." );
-                System.out.println( "Importe a pagar"   + temp +"€" );
-                System.out.println( "*****************************" ) ;
+                impor =  PRECIO_TARIFA_PLANA_REGULAR ;
             }
-
-            else if(entrada < 600 || entrada >= 830 && salida < 1500 || salida >= 1800) {
-                System.out.println( "*****************************" );
-                System.out.println( "Cliente nº : " + cliente );
-                System.out.println("Hora de la entrada: " + Varible2); 
-                System.out.println( "Hora de la salida: " + Varible3 );
-                System.out.println( "Tarifa a aplicar: " + reg + "." );
-                System.out.println( "Importe a pagar" + reg  + "€" );
-                System.out.println( "*****************************" ) ;
+            /** tipo tarifa de entrada regular */
+            else {
+                if ( entrada > 1100 && salida > 1100){ 
+                    impor = PRECIO_BASE_REGULAR + ((salidaMinutos - entradaMinutos) / 30) * PRECIO_MEDIA_REGULAR_DESPUES11;
+                }
+                else if (entrada < 1100 && salida < 1100) {
+                    impor = PRECIO_BASE_REGULAR + ((salidaMinutos - entradaMinutos) / 30) * PRECIO_MEDIA_REGULAR_HASTA11;
+                }
+                else {
+                    impor = PRECIO_BASE_REGULAR + PRECIO_MEDIA_REGULAR_HASTA11 * ( 11 * 60 - entradaMinutos ) /30 +  
+                    (salidaMinutos - 11 * 60) / 30 *  PRECIO_MEDIA_REGULAR_DESPUES11
+                    ; 
+                }
+                break;
             }
-
-            break;
+            /** tipo tarifa de entrada tresPrimeras */
             case 'C': if ((salida - entrada) <= 300) {
-                System.out.println( "*****************************" );
-                System.out.println( "Cliente nº : " + cliente );
-                System.out.println("Hora de la entrada: " + Varible2); 
-                System.out.println( "Hora de la salida: " + Varible3 );
-                System.out.println( "Tarifa a aplicar: " +  tipoTarifa);
-                System.out.println( "Importe a pagar"  + tresprimeras + "€"  );
-                System.out.println( "*****************************" ) ;
+                impor = PRECIO_PRIMERAS3_COMERCIAL; 
             }
-
-            else if ((salida - entrada) > 300){
-                System.out.println( "*****************************" );
-                System.out.println( "Cliente nº : " + cliente );
-                System.out.println("Hora de la entrada: " + Varible2); 
-                System.out.println( "Hora de la salida: " + Varible3 );
-                System.out.println( "Tarifa a aplicar: " + tipoTarifa );
-                System.out.println( "Importe a pagar" + cadMedia + "€"  );
-                System.out.println( "*****************************" ) ;
-            }  
+            /** tipo tarifa de entrada cada media */
+            else { 
+                impor = ((salidaMinutos - entradaMinutos - 180) / 30) *  PRECIO_MEDIA_COMERCIAL +  PRECIO_PRIMERAS3_COMERCIAL; 
+            }
             break;
+             
         }
-
+        /** Falta el importeTotal   
+         *  Falta el clienteMaximoComercial guarda el numero de cliente de los comerciales  */ 
+        System.out.println( "*****************************" );
+        System.out.println( "Cliente nº : " + cliente + ".");
+        System.out.println("Hora de la entrada : " + Varible2 + "."); 
+        System.out.println( "Hora de la salida : " + Varible3 + ".");
+        System.out.println( "Tarifa a aplicar: " + tipoTarifa + " . " );
+        System.out.println( " Importe a pagar "   + impor + " € " );
+        System.out.println( "*****************************" ) ;
     }
 
     /**
@@ -160,7 +161,6 @@ public class Parking
      *  
      */
     public void printEstadísticas() {
-        importeTotal = ;
         System.out.println("*********************************************************");
         System.out.println("Importe total entre todos los clientes facturados" + importeTotal);
         System.out.println("Número de clientes en la tarifa regular: " + regular);
@@ -174,7 +174,8 @@ public class Parking
      */
     public String diaMayorNumeroClientes() {
         if (clientesSabado > clientesLunes && clientesSabado > clientesLunes){
-            return "SABADO";}
+            return "SABADO";
+        }
         else if (clientesDomingo > clientesLunes){
             return "DOMINGO";
         }

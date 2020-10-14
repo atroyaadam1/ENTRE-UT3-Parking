@@ -7,7 +7,7 @@
  * cerca del parking, aparcan un nº elevado de horas y se benefician de esta 
  * tarifa más económica
  * (leer enunciado)
- * author : ANTHONNY TROYA 
+ * @author - ANTHONNY TROYA 
  * 
  */
 public class Parking
